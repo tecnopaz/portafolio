@@ -1,0 +1,108 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow">
+<title>Panel administrativo | engenie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+:root{--p:#5aa0ff;--on:#04070d;--bg:#04070d;--tx:#eef2fa;--cc:#0a111f;--mu:#98a3b8;--ln:#ffffff1f;--d:"Syne","Helvetica Neue",Arial,sans-serif;--b:"Inter",system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--tx);font-family:var(--b);-webkit-font-smoothing:antialiased;background-image:radial-gradient(#ffffff12 1px,transparent 1.3px);background-size:6px 6px;min-height:100vh}
+[hidden]{display:none!important}:focus-visible{outline:2px solid var(--p);outline-offset:2px}
+svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pill{display:inline-flex;align-items:center;gap:10px;background:var(--p);color:var(--on);text-decoration:none;font:600 14px var(--b);padding:7px 7px 7px 20px;border-radius:50px;border:0;cursor:pointer;transition:filter .2s;white-space:nowrap}
+.pill:hover{filter:brightness(1.1)}.pill i{width:32px;height:32px;border-radius:50%;background:var(--on);color:var(--p);display:grid;place-items:center}
+.pill.g{background:#ffffff10;color:var(--tx);border:1px solid var(--ln)}.pill.g i{background:var(--tx);color:var(--bg)}
+.pill.d{background:transparent;color:#ff8d8d;border:1px solid #ff8d8d55}.pill.d i{background:#ff8d8d;color:var(--bg)}
+.pill.s{padding:5px 5px 5px 14px;font-size:12px}.pill.s i{width:24px;height:24px}
+header{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:calc(14px + env(safe-area-inset-top)) 5vw 14px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--ln)}
+header b{font:800 20px var(--d);letter-spacing:-.02em}header small{color:var(--mu);margin-left:8px;font:500 12px var(--b);letter-spacing:2px;text-transform:uppercase}header div{display:flex;gap:8px;flex-wrap:wrap}
+main{max-width:980px;margin:auto;padding:4vh 5vw 14vh}
+details{background:linear-gradient(145deg,var(--cc),#05070d);border:1px solid #ffffff14;border-radius:26px;margin-bottom:16px;box-shadow:0 20px 60px #0007}
+summary{cursor:pointer;list-style:none;padding:22px 26px;font:600 clamp(18px,2vw,24px) var(--d);display:flex;justify-content:space-between;align-items:center;gap:12px}summary::-webkit-details-marker{display:none}
+summary span{font:500 12px var(--b);color:var(--mu);letter-spacing:2px;text-transform:uppercase}
+.bd{padding:0 26px 26px}
+label{display:block;font:500 12px var(--b);letter-spacing:1.5px;text-transform:uppercase;color:var(--mu);margin:16px 0 6px}
+input,textarea{width:100%;padding:13px 15px;background:#ffffff08;border:1px solid var(--ln);color:var(--tx);border-radius:14px;font:400 15px var(--b);outline:0}
+input:focus,textarea:focus{border-color:var(--p)}input[type=color]{height:48px;padding:4px;cursor:pointer}input[type=range]{padding:0;accent-color:var(--p)}input[type=file]{padding:9px;font-size:13px;color:var(--mu)}
+textarea{resize:vertical;line-height:1.55}
+.gc{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:0 16px}.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:0 16px}
+.item{margin-top:14px;padding:18px;border:1px solid var(--ln);border-radius:20px;background:#ffffff06}.item h4{font:600 15px var(--d);margin-bottom:2px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.prev{width:100%;max-height:170px;object-fit:cover;border-radius:14px;margin:8px 0;background:#111}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.slot{border:1px solid var(--ln);border-radius:16px;padding:10px;background:#ffffff06}.slot img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;background:#111;margin-bottom:6px}.slot .acts{margin-top:8px}
+.hint{color:var(--mu);font-size:13px;line-height:1.5;margin-top:8px}
+.lg{min-height:100vh;display:grid;place-items:center;padding:24px}.lg .box{width:100%;max-width:420px;padding:34px;border-radius:30px;background:linear-gradient(145deg,var(--cc),#05070d);border:1px solid #ffffff14;box-shadow:0 30px 80px #000a}
+.lg b{font:800 24px var(--d)}.lg h1{font:600 30px/1.1 var(--d);margin:18px 0 6px}.lg p{color:var(--mu);font-size:14px}.lg .pill{margin-top:22px}
+#msg{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,200%);background:var(--p);color:var(--on);padding:13px 22px;border-radius:40px;font:600 14px var(--b);z-index:50;transition:transform .4s;max-width:90vw}#msg.on{transform:translate(-50%,0)}
+@media(max-width:700px){.g2{grid-template-columns:1fr}.slots{grid-template-columns:1fr}.bd{padding:0 18px 20px}summary{padding:18px}header{padding-left:4vw;padding-right:4vw}}
+</style></head><body>
+<div class="lg" id="login"><div class="box"><b>engenie</b><h1>Panel administrativo</h1><p>Acceso privado. Ingresa con tu correo y contraseña.</p>
+<label>Correo</label><input id="em" type="email" autocomplete="username"><label>Contraseña</label><input id="pw" type="password" autocomplete="current-password"><button class="pill" id="go"><span>Entrar</span><i data-ic="arr"></i></button><p id="err" style="color:#ff8d8d;margin-top:14px"></p></div></div>
+<div id="app" hidden>
+<header><div style="display:block"><b>engenie</b><small>Panel</small></div><div><a class="pill g" href="index.html" target="_blank" rel="noopener"><span>Ver web</span><i data-ic="arr"></i></a><button class="pill" onclick="save()"><span>Guardar cambios</span><i data-ic="ok"></i></button><button class="pill g" onclick="out()"><span>Salir</span><i data-ic="x"></i></button></div></header>
+<main id="m"></main></div>
+<div id="msg"></div>
+<script src="shared.js"></script>
+<script>
+const $=i=>document.getElementById(i);let S;
+const sv=d=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
+const IC={arr:sv('<path d="M5 12h14M13 6l6 6-6 6"/>'),x:sv('<path d="M6 6l12 12M18 6L6 18"/>'),ok:sv('<path d="M5 12.5l4.5 4.5L19 7"/>'),up:sv('<path d="M12 19V5M6 11l6-6 6 6"/>'),dn:sv('<path d="M12 5v14M6 13l6 6 6-6"/>'),plus:sv('<path d="M12 5v14M5 12h14"/>')};
+document.querySelectorAll("[data-ic]").forEach(e=>e.innerHTML=IC[e.dataset.ic]);
+const toast=t=>{const m=$("msg");m.textContent=t;m.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>m.classList.remove("on"),2800)};
+// ---- sesión
+async function login(){if(!sb){$("err").textContent="Falta configurar SUPABASE_URL y SUPABASE_KEY en shared.js";return}
+ const{error}=await sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value});error?$("err").textContent="Correo o contraseña incorrectos":init()}
+$("go").onclick=login;$("pw").addEventListener("keydown",e=>e.key=="Enter"&&login());
+async function out(){await sb.auth.signOut();location.reload()}
+async function init(){if(!sb)return;const{data}=await sb.auth.getSession();if(!data.session)return;
+ $("login").hidden=true;$("app").hidden=false;S=await loadSettings();S.sectors.forEach(x=>{norm(x);while(x.imgs.length<3)x.imgs.push("")});applyTheme(S);render()}
+// ---- campos
+const set=(k,v)=>{S[k]=v};
+function fld(k,label,type){const v=esc(S[k]);
+ if(type=="area")return `<label>${label}</label><textarea rows="4" oninput="S['${k}']=this.value">${v}</textarea>`;
+ if(type=="color")return `<div><label>${label}</label><input type="color" value="${v}" oninput="S['${k}']=this.value;applyTheme(S)"></div>`;
+ if(type=="range")return `<label>${label}</label><input type="range" min="0" max="1" step=".05" value="${v}" oninput="S['${k}']=+this.value;applyTheme(S)">`;
+ if(type=="image")return `<label>${label}</label>${S[k]?`<img class="prev" src="${v}" alt="" onerror="this.style.display='none'">`:""}<input id="f_${k}" value="${v}" placeholder="URL de la imagen" oninput="S['${k}']=this.value"><input type="file" accept="image/*" style="margin-top:8px" onchange="upTo(this,v=>{S['${k}']=v;render()})">`;
+ return `<label>${label}</label><input value="${v}" oninput="S['${k}']=this.value">`}
+function lst(key,fields,blank,single){return `<div>${S[key].map((it,i)=>`<div class="item"><h4><span>${single} ${i+1}</span><button class="pill d s" onclick="del('${key}',${i})"><span>Eliminar</span><i>${IC.x}</i></button></h4>${fields.map(([f,l,t])=>t=="area"?`<label>${l}</label><textarea rows="2" oninput="S['${key}'][${i}]['${f}']=this.value">${esc(it[f])}</textarea>`:`<label>${l}</label><input value="${esc(it[f])}" oninput="S['${key}'][${i}]['${f}']=${t=="num"?"+this.value":"this.value"}">`).join("")}</div>`).join("")}<div class="acts"><button class="pill g" onclick="S['${key}'].push(${esc(JSON.stringify(blank)).replace(/&quot;/g,"&quot;")});render()"><span>Agregar ${single.toLowerCase()}</span><i>${IC.plus}</i></button></div></div>`}
+function del(k,i){if(confirm("¿Eliminar este elemento?")){S[k].splice(i,1);render()}}
+function sec(t,tag,body,open){return `<details ${open?"open":""}><summary>${t}<span>${tag}</span></summary><div class="bd">${body}</div></details>`}
+// ---- sectores
+function secs(){return S.sectors.map((x,i)=>`<div class="item"><h4><span>${esc(x.title)||"Sector"} <span style="color:var(--mu);font-weight:400">(${i+1})</span></span><span style="display:flex;gap:6px">${i?`<button class="pill g s" onclick="mv(${i},-1)"><span>Subir</span><i>${IC.up}</i></button>`:""}${i<S.sectors.length-1?`<button class="pill g s" onclick="mv(${i},1)"><span>Bajar</span><i>${IC.dn}</i></button>`:""}<button class="pill d s" onclick="delSec(${i})"><span>Eliminar</span><i>${IC.x}</i></button></span></h4>
+<div class="g2"><div><label>Nombre del sector</label><input value="${esc(x.title)}" oninput="S.sectors[${i}].title=this.value"></div><div><label>Subtítulo</label><input value="${esc(x.tag)}" oninput="S.sectors[${i}].tag=this.value"></div></div>
+<label>Descripción corta (opcional)</label><textarea rows="2" oninput="S.sectors[${i}].text=this.value">${esc(x.text||"")}</textarea>
+<label>Fotos (hasta 3)</label><div class="slots">${[0,1,2].map(j=>`<div class="slot">${x.imgs[j]?`<img src="${esc(x.imgs[j])}" alt="" onerror="this.style.visibility='hidden'">`:`<img alt="" style="visibility:hidden">`}<input value="${esc(x.imgs[j])}" placeholder="URL de la foto ${j+1}" oninput="S.sectors[${i}].imgs[${j}]=this.value"><input type="file" accept="image/*" style="margin-top:6px" onchange="upTo(this,v=>{S.sectors[${i}].imgs[${j}]=v;render()})"><div class="acts"><button class="pill d s" onclick="S.sectors[${i}].imgs[${j}]='';render()"><span>Quitar</span><i>${IC.x}</i></button></div></div>`).join("")}</div>
+<label>Fases o soluciones</label>${x.phases.map((p,k)=>`<div class="item"><h4><span>Fase ${k+1}</span><button class="pill d s" onclick="if(confirm('¿Eliminar esta fase?')){S.sectors[${i}].phases.splice(${k},1);render()}"><span>Eliminar</span><i>${IC.x}</i></button></h4><label>Nombre de la fase</label><input value="${esc(p.t)}" oninput="S.sectors[${i}].phases[${k}].t=this.value"><label>Qué hace</label><textarea rows="3" oninput="S.sectors[${i}].phases[${k}].q=this.value">${esc(p.q)}</textarea><label>Valor</label><textarea rows="2" oninput="S.sectors[${i}].phases[${k}].v=this.value">${esc(p.v)}</textarea></div>`).join("")}
+<div class="acts"><button class="pill g s" onclick="S.sectors[${i}].phases.push({t:'Nueva fase',q:'',v:''});render()"><span>Agregar fase</span><i>${IC.plus}</i></button></div></div>`).join("")+`<div class="acts"><button class="pill" onclick="S.sectors.push({title:'Nuevo sector',tag:'Subtítulo',text:'',imgs:['','',''],phases:[{t:'Fase 1',q:'',v:''}]});render()"><span>Agregar sector</span><i>${IC.plus}</i></button></div>`}
+function mv(i,d){const j=i+d;[S.sectors[i],S.sectors[j]]=[S.sectors[j],S.sectors[i]];render()}
+function delSec(i){if(confirm("¿Eliminar este sector completo?")){S.sectors.splice(i,1);render()}}
+// ---- render
+function render(){const y=scrollY,op=[...document.querySelectorAll("details")].map(d=>d.open);
+ $("m").innerHTML=
+ sec("Marca y banner","Superior",fld("brand","Nombre o marca (también es la palabra que forman los puntos del inicio)")+fld("banner","Texto del banner que se mueve arriba"),op[0]??true)+
+ sec("Inicio","Portada",`<p class="hint">Diapositivas del inicio: se cambian solas con letras animadas. Puedes agregar todas las que quieras.</p>`+lst("heroSlides",[["eyebrow","Etiqueta pequeña"],["title","Título"],["text","Texto","area"]],{eyebrow:"",title:"",text:""},"Diapositiva")+fld("heroImage","Imagen de fondo del inicio","image")+`<div class="g2">${fld("heroC1","Color del fondo, arriba","color")}${fld("heroC2","Color del fondo, abajo","color")}</div>`+fld("heroOp","Intensidad de la imagen sobre el fondo","range"),op[1]??false)+
+ sec("Información en movimiento","Inicio",`<p class="hint">Tarjetas que se desplazan solas al final del inicio.</p>`+lst("infoCards",[["t","Título"],["d","Descripción","area"]],{t:"",d:""},"Tarjeta"),op[2]??false)+
+ sec("Presentación y cifras","Debajo del inicio",fld("ctxText","Párrafo de presentación","area")+lst("stats",[["n","Número","num"],["s","Sufijo (ejemplo: %)"],["l","Descripción"]],{n:0,s:"",l:""},"Cifra"),op[3]??false)+
+ sec("Sectores","Categorías",secs(),op[4]??false)+
+ sec("Textos de secciones","Títulos",fld("secTitle","Título de Sectores")+fld("secText","Texto de Sectores","area")+fld("specTitle","Título de El servicio")+fld("specLead","Texto de El servicio")+fld("ctaTitle","Título final")+fld("cta","Texto del botón de WhatsApp")+fld("footerText","Texto del pie de página"),op[5]??false)+
+ sec("Formulario de consulta","Sectores",fld("formTitle","Título del formulario")+fld("formText","Texto del formulario","area")+fld("formNeeds","Opciones de \"¿Qué necesitas?\" (una por línea)","area")+fld("waForm","Primera línea del mensaje de WhatsApp","area")+`<p class="hint">El cliente llena el formulario y se abre tu WhatsApp con el mensaje ya escrito.</p>`,op[6]??false)+
+ sec("Especificaciones del servicio","Tarjetas",lst("specs",[["t","Título"],["d","Descripción","area"]],{t:"",d:""},"Especificación"),op[7]??false)+
+ sec("Proceso de trabajo","Pasos",lst("steps",[["t","Título"],["d","Descripción","area"]],{t:"",d:""},"Paso"),op[8]??false)+
+ sec("WhatsApp y mensajes","Contacto",fld("whatsapp","Número con código de país, solo dígitos (ejemplo: 50375147697)")+fld("waGeneral","Mensaje general","area")+fld("waSector","Mensaje por sector","area")+fld("waPhase","Mensaje por fase","area")+`<p class="hint">Puedes usar {sector}, {subtitulo} y {fase}. Se reemplazan solos con lo que el cliente está viendo.</p>`,op[9]??false)+
+ sec("Colores de la web","Estilo",`<div class="gc">${fld("cPrimary","Acento","color")}${fld("cBg","Fondo","color")}${fld("cText","Texto","color")}${fld("cCard","Tarjetas","color")}${fld("cBanner","Barra superior","color")}${fld("cWa","Botón WhatsApp","color")}</div>`,op[10]??false)+
+ sec("Textos legales","Privacidad y cookies",fld("privacy","Política de privacidad","area").replace('rows="4"','rows="14"')+fld("cookies","Política de cookies","area").replace('rows="4"','rows="10"')+`<p class="hint">Formato: "# Título", "## Subtítulo", líneas con "- " para listas y una línea en blanco entre párrafos.</p>`,op[11]??false)+
+ `<div class="acts"><button class="pill" onclick="save()"><span>Guardar cambios</span><i>${IC.ok}</i></button><button class="pill d" onclick="reset()"><span>Restaurar valores originales</span><i>${IC.x}</i></button></div>`;
+ scrollTo(0,y)}
+// ---- subida y guardado
+async function upTo(el,cb){const f=el.files[0];if(!f)return;toast("Subiendo imagen...");
+ const p=Date.now()+"-"+f.name.replace(/[^\w.]/g,"_");const{error}=await sb.storage.from("media").upload(p,f,{cacheControl:"31536000"});
+ if(error){toast(error.message);return}cb(sb.storage.from("media").getPublicUrl(p).data.publicUrl);toast("Imagen subida")}
+async function save(){const c=JSON.parse(JSON.stringify(S));
+ c.sectors=c.sectors.map(x=>({title:x.title,tag:x.tag,text:x.text||"",imgs:(x.imgs||[]).filter(Boolean).slice(0,3),phases:x.phases}));
+ const rows=Object.keys(c).map(k=>({key:k,value:c[k]}));
+ const{error}=await sb.from("site_settings").upsert(rows,{onConflict:"key"});toast(error?"Error: "+error.message:"Cambios guardados. Ya se ven en la web.")}
+async function reset(){if(!confirm("Se borrarán todos tus cambios y la web volverá a los textos originales. ¿Continuar?"))return;
+ const{error}=await sb.from("site_settings").delete().neq("key","");if(error){toast(error.message);return}toast("Valores originales restaurados");setTimeout(()=>location.reload(),900)}
+init();
+</script></body></html>
